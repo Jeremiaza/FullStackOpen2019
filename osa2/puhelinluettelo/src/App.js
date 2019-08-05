@@ -1,39 +1,47 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import ListPersons from './Components/ListPersons'
-//import PersonForm from './Components/PersonForm'
+import AxiosServices from './Services/service'
+
 
 const App = () => {
-  const [ persons, setPersons ] = useState([])
-  const [ filter, setFilter] = useState('')
-  const [ newName, setNewName ] = useState('')
-  const [ newNumber, setNewNumber ] = useState('')
+  const [persons, setPersons] = useState([])
+  const [filter, setFilter] = useState('')
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
 
-  useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/db')
-      .then(response => {
-        console.log(response.data)
-        setPersons(response.data.persons)
-      })
-  }, [])
+  useEffect(() => { 
+    getData()
+  }, [persons])
+
+  const getData = () => {
+    AxiosServices
+    .getAll()
+    .then(response => {
+      setPersons(response.data)
+    })
+  }
   const addPerson = (event) => {
     event.preventDefault()
     var nameAlreadyExists = false
     persons.forEach(person => {
-        if (person.name === newName) {
-            nameAlreadyExists = true
-        } 
+      if (person.name === newName) {
+        nameAlreadyExists = true
+      }
     });
     if (!nameAlreadyExists) {
-        const personObject = {
-            name: newName,
-            number: newNumber
-        }
-        setPersons(persons.concat(personObject))   
+      const personObject = {
+        name: newName,
+        number: newNumber
+      }
+      
+      AxiosServices
+        .create(personObject)
+        .then(response => {
+          console.log(response)
+          setPersons(persons.concat(personObject))
+        })
     } else {
-        alert(`${newName} on jo luettelossa`)
+      alert(`${newName} on jo luettelossa`)
     }
     setNewName('')
     setNewNumber('')
@@ -58,24 +66,22 @@ const App = () => {
     <div>
       <h2>Puhelinluettelo</h2>
       <div>rajaa näytettäviä <input value={filter}
-        onChange={handleFilterChange}/></div>
+        onChange={handleFilterChange} /></div>
       <h2>Lisää uusi</h2>
       <form onSubmit={addPerson}>
         <div> nimi: <input value={newName}
-        onChange={handlePersonsChange}/>
-        <div>numero: <input value={newNumber}
-        onChange={handleNumberChange}/></div>
+          onChange={handlePersonsChange} />
+          <div>numero: <input value={newNumber}
+            onChange={handleNumberChange} /></div>
         </div>
         <div>
-        <button type="submit">lisää</button>
+          <button type="submit">lisää</button>
         </div>
       </form>
-
       <h2>Numerot</h2>
-      {ListPersons({persons}, {filter})}
+      {ListPersons({ persons }, { filter })}
     </div>
   )
 
 }
-
 export default App

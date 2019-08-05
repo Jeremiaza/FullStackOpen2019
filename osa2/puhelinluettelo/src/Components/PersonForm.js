@@ -41,7 +41,7 @@ const PersonForm = () => {
       }
     return (
         <form onSubmit={addPerson}>
-        <div> nimi: <input value={newName}
+        <div>nimi: <input value={newName}
         onChange={handlePersonsChange}/>
         <div>numero: <input value={newNumber}
         onChange={handleNumberChange}/></div>
