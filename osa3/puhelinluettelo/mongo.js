@@ -12,7 +12,7 @@ const number = process.argv[4];
 
 
 const url =
-    `mongodb+srv://fullstack:${password}@cluster0-q4rkv.mongodb.net/note-app?retryWrites=true&w=majority`
+    `mongodb+srv://fullstack:${password}@cluster0-q4rkv.mongodb.net/puhelinluettelo?retryWrites=true&w=majority`
 
 
 mongoose.connect(url, { useNewUrlParser: true })
