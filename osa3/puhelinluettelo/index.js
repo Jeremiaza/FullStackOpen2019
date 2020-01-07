@@ -1,17 +1,21 @@
+require('dotenv').config()
 const express = require('express')
 var morgan = require('morgan')
 const cors = require('cors')
 const app = express()
 const bodyParser = require('body-parser')
+const Person = require('./models/person')
+
 app.use(bodyParser.json())
 app.use(cors())
 app.use(morgan(':method :status :nametoken :numbertoken :res[content-length] - :response-time ms'))
-morgan.token('nametoken', function(req, res) {
-	return req.body.name;
+morgan.token('nametoken', function (req, res) {
+  return req.body.name;
 });
-morgan.token('numbertoken', function(req, res) {
+morgan.token('numbertoken', function (req, res) {
   return req.body.number;
 });
+
 let persons =
 
   [
@@ -42,6 +46,7 @@ let persons =
     }
   ]
 
+
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
   console.log('Path:  ', request.path)
@@ -55,17 +60,16 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-  res.send(persons)
+  Person.find({}).then(persons => {
+    res.json(persons.map(person => person.toJSON()))
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
-  const person = persons.find(person => {
-    console.log(person.id, typeof person.id, id, typeof id, person.id === id)
-    return person.id === id
+  Person.findById(id).then(person => {
+    response.json(person.toJSON())
   })
-  console.log(person)
-  response.json(person)
 })
 
 app.get('/info', (req, res) => {
@@ -96,21 +100,26 @@ app.post('/api/persons', (request, response) => {
       error: 'number is missing'
     })
   }
-  const name = request.body.name
-  persons.forEach(person => {
-    if (person.name === name) {
-      return response.status(400).json({
-        error: 'name already exists'
-      })
-    }
-  })
 
-  const person =
-  {
-    "name": request.body.name,
-    "number": request.body.number,
-    "id": Math.floor(Math.random() * 5000) + 1
-  }
+  const note = new Note({
+    content: body.content,
+    important: body.important || false,
+    date: new Date(),
+  })
+  const person = new Person(
+    {
+      "name": request.body.name,
+      "number": request.body.number,
+      "id": Math.floor(Math.random() * 5000) + 1
+    })
+
+  person
+    .save()
+    .then(savedPerson => savedPerson.toJSON())
+    .then(savedAndFormattedPerson => {
+      response.json(savedAndFormattedPerson)
+    })
+    .catch(error => next(error))
   console.log(person)
   response.json(person)
 })
