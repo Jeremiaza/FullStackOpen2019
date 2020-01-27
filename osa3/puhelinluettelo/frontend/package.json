@@ -1,0 +1,23 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "Puhelinluettelo frontend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jeremiaza/FullStackOpen2019.git"
+  },
+  "author": "Jeremias Korhonen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jeremiaza/FullStackOpen2019/issues"
+  },
+  "homepage": "https://github.com/Jeremiaza/FullStackOpen2019#readme",
+  "dependencies": {
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
+  }
+}
