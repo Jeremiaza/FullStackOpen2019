@@ -57,7 +57,7 @@ const requestLogger = (request, response, next) => {
 }
 
 app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>')
+  res.send('<h1>Welcome to the useless phonebook!</h1>')
 })
 
 app.get('/api/persons', (req, res) => {

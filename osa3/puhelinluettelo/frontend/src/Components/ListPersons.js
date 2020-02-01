@@ -2,7 +2,7 @@ import React from 'react'
 
 const ListPersons = ({persons , filter, removePerson}) => {
 
-    return (persons.map((x) => {
+    if (persons) return (persons.map((x) => {
         if (x.name.toLowerCase().indexOf(filter.toLowerCase()) !== -1 && filter !== '') {
             return (
                 <li key={x.name}>{x.name} {x.number + '  '}
