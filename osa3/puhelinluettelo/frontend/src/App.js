@@ -34,7 +34,6 @@ const App = () => {
             AxiosServices
             .update(person.id, person)
             .then(response => {
-              console.log(response)
             })
             
           }
@@ -64,12 +63,10 @@ const App = () => {
   }
 
   const removePerson = (x) => {
-    console.log(x)
     if (window.confirm('Delete ' +x.name+ "?")) {
     AxiosServices
-    .delete(x.id, x)
+    .deleteObject(x.id)
     .then(response => {
-      console.log(response)
       getData()
       showMessage('Deleted')
     })

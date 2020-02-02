@@ -17,7 +17,7 @@ morgan.token('numbertoken', function (req, res) {
   return req.body.number;
 });
 
-let persons =
+/*let persons =
 
   [
     {
@@ -45,7 +45,7 @@ let persons =
       "number": "121231",
       "id": 5
     }
-  ]
+  ]*/
 
 
 const requestLogger = (request, response, next) => {
@@ -90,7 +90,7 @@ app.get('/api/info', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
-  const id = Number(request.params.id)
+  const id = request.params.id
   Person.findByIdAndRemove(id)
     .then(result => {
       response.status(204).end()
@@ -117,8 +117,7 @@ app.post('/api/persons', (request, response) => {
   const person = new Person(
     {
       "name": request.body.name,
-      "number": request.body.number,
-      "id": Math.floor(Math.random() * 5000) + 1
+      "number": request.body.number
     })
 
   person
