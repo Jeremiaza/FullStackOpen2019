@@ -20,5 +20,6 @@ const ListPersons = ({persons , filter, removePerson}) => {
 
     })
     )
+    return null;
 }
 export default ListPersons

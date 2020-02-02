@@ -18,6 +18,7 @@ const App = () => {
     AxiosServices
     .getAll()
     .then(response => {
+      console.log(response.data)
       setPersons(response.data)
     })
   }
@@ -106,7 +107,7 @@ const App = () => {
   return (
     <div>
       <h2>Puhelinluettelo</h2>
-      {message&&(<div className='error'>{message}</div>)} 
+      {message&&(<div className='error'>{message}</div>)}
       <div>rajaa näytettäviä <input value={filter}
         onChange={handleFilterChange} /></div>
       <h2>Lisää uusi</h2>
