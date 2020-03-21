@@ -8,9 +8,19 @@ usersRouter.get('/', async (request, response) => {
 })
 
 usersRouter.post('/', async (request, response) => {
-  if (!request.body) {
+  if (!request.body.username) {
     return response.status(400).json({
-      error: 'Something is missing with your request'
+      error: 'Username is missing'
+    })
+  }
+  if (!request.body.password) {
+    return response.status(400).json({
+      error: 'password is missing'
+    })
+  }
+  if (request.body.password.length <3) {
+    return response.status(400).json({
+      error: 'password must be 3 characters minimum'
     })
   }
   const body = request.body

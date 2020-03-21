@@ -77,7 +77,7 @@ test('the first blog author is Ollie', async () => {
   expect(response.body[0].author).toBe('Ollie')
 })
 
-describe('when there is initially one user at db', () => {
+describe('user and login testing', () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
@@ -107,6 +107,19 @@ describe('when there is initially one user at db', () => {
 
     const usernames = usersAtEnd.map(u => u.username)
     expect(usernames).toContain(newUser.username)
+  })
+
+  test('test log in with created username without secret key', async () => {
+    const user = {
+      username: "Jeremiaza",
+      password: "salasana"
+    }
+
+    await api
+      .post('/api/login')
+      .send(user)
+      .expect(401)
+      .expect('Content-Type', /application\/json/)
   })
 })
 

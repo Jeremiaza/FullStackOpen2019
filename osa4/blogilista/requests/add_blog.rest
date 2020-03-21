@@ -1,9 +1,10 @@
 POST http://localhost:3001/api/blogs/
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkplcmVtaWF6YSIsImlkIjoiNWU3NWY5YzE1ODkzZWYwMmMwZDk0ZDBjIiwiaWF0IjoxNTg0NzkxOTU1fQ.qkwlYq58DOLg74ki-fBbAeVlxC4nmRoVbOgJed_ymL0
 
 {
-    "title": "My Blog of Looove",
-    "author": "Ollie",
+    "title": "My Own Blog",
+    "author": "Jesse",
     "url": "www.blog.com",
     "likes": 2000
 }
