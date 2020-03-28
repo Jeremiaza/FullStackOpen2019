@@ -76,6 +76,7 @@ blogRouter.put('/:id', (request, response, next) => {
 
 blogRouter.delete('/:id',async (request, response, next) => {
   const id = request.params.id
+  const token = getTokenFrom(request)
   const decodedToken = jwt.verify(token, process.env.SECRET)
   if (!token || !decodedToken.id) {
     return response.status(401).json({ error: 'token missing or invalid' })
@@ -83,10 +84,12 @@ blogRouter.delete('/:id',async (request, response, next) => {
   const user = await User.findById(decodedToken.id)
   const blog = await Blog.findById(id)
   if (user.username===blog.user.username) {
-    const deletedBlog = await Blog.findById(id)
-    user.blogs = user.blogs.splice(deletedBlog._id)
+    user.blogs = user.blogs.splice(blog._id)
     await user.save()
     await Blog.findByIdAndRemove(id)
+  } else {
+    console.log('You can only delete blogs that belong to you')
+    response.status(404).end()
   }
 })
 
