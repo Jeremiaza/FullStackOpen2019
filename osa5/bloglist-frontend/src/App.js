@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import Blog from './components/Blog';
-import Notification from './components/Notification';
-import LoginForm from './components/LoginForm';
-import Togglable from './components/Togglable';
-import BlogForm from './components/BlogForm';
-import blogService from './services/blogs';
-import loginService from './services/login';
-import ReactNotification from 'react-notifications-component';
-import 'react-notifications-component/dist/theme.css';
+import React, { useState, useEffect } from 'react'
+import Blog from './components/Blog'
+import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import Togglable from './components/Togglable'
+import BlogForm from './components/BlogForm'
+import blogService from './services/blogs'
+import loginService from './services/login'
+import ReactNotification from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -19,9 +19,9 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs(blogs)
+      setBlogs(blogs.sort((a, b) => (a.likes < b.likes) ? 1 : -1))
     )
-  }, [])
+  }, [blogs])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -31,6 +31,12 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const blogUpdater = () => {
+    blogService.getAll().then(blogs =>
+      setBlogs(blogs.sort((a, b) => (a.likes < b.likes) ? 1 : -1))
+    )
+  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -63,8 +69,12 @@ const App = () => {
   const deleteBlog = (blogId) => {
     blogService
       .deleteById(blogId)
-      .then(stuff => {
-        console.log(stuff)
+      .then(() => {
+        let tempBlogs = blogs
+        let removeIndex = tempBlogs.map(function (item) { return item.id }).indexOf(blogId)
+        Notification('deletesuccess', tempBlogs[removeIndex].title, tempBlogs[removeIndex].author)
+        tempBlogs.splice(removeIndex, 1)
+        setBlogs(tempBlogs)
       })
   }
 
@@ -86,8 +96,6 @@ const App = () => {
     </Togglable>
   )
 
-
-
   const logOut = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUsername('')
@@ -103,19 +111,19 @@ const App = () => {
         <div>
           <p>{user.name} logged in</p>
           <button type="submit" style={{
-              margin:10
-            }}
-            onClick={logOut}>log out</button>
+            margin: 10
+          }}
+          onClick={logOut}>log out</button>
           {blogForm()}
         </div>
       }
       <div>
-        {blogs.map(blog =>
-          <div style={{display:'flex'}}>
-            <Blog key={blog.id} blog={blog} />
+        {blogs.map((blog, index) =>
+          <div style={{ display: 'flex' }} key={'blog-container'+index}>
+            <Blog key={blog.id} blog={blog} action={blogUpdater}/>
             <button type="submit" style={{
-              height:30,
-              marginLeft:10
+              height: 30,
+              marginLeft: 10
             }} onClick={() => deleteBlog(blog.id)}>delete blog</button>
           </div>
         )}
