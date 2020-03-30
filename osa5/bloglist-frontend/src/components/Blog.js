@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import blogService from '../services/blogs'
 
 
@@ -60,4 +61,15 @@ const Blog = ({ blog, action }) => {
   )
 }
 
+Blog.displayName = 'Blog'
+Blog.propTypes = {
+  blog: {
+    title: PropTypes.string,
+      author: PropTypes.string,
+      url: PropTypes.string,
+      likes: PropTypes.number,
+      id: PropTypes.string
+  },
+  action: PropTypes.func
+};
 export default Blog
