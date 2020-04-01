@@ -120,7 +120,7 @@ const App = () => {
       <div>
         {blogs.map((blog, index) =>
           <div style={{ display: 'flex' }} key={'blog-container'+index}>
-            <Blog key={blog.id} blog={blog} action={blogUpdater}/>
+            <Blog key={blog.id} blog={blog} updateBlog={blogUpdater}/>
             <button type="submit" style={{
               height: 30,
               marginLeft: 10
