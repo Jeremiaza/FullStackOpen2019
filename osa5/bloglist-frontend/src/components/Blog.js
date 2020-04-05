@@ -12,27 +12,29 @@ const Blog = ({ blog, updateBlog }) => {
       title: blog.title,
       author: blog.author,
       url: blog.url,
-      likes: (blog.likes+1),
+      likes: (blog.likes + 1),
       id: blog.id
     }
+
     blogService.update(blog.id, updatedBlog).then(
       updateBlog
+
     )
   }
 
   const showBlogs = () => {
     if (blogDetails) {
       return (
-        <div style={{ width:350, marginBottom:15,height:60, border:'1px solid black' }} className="blog-container-extended">
+        <div style={{ width: 350, marginBottom: 15, height: 60, border: '1px solid black' }} className="blog-container-extended">
           {blog.title} by {blog.author}
           <div>url: {blog.url}</div>
           <div>likes: {blog.likes}</div>
-          <button type="submit" style={{
+          <button type="submit" id='hide-button' style={{
             marginLeft: 15,
             float: 'right',
             marginTop: -55
           }} onClick={() => setBlogDetails(false)}>hide</button>
-          <button type="submit" style={{
+          <button type="submit" className='likebutton' style={{
             marginLeft: 15,
             marginTop: -20,
             backgroundColor: 'lightgreen',
@@ -42,13 +44,13 @@ const Blog = ({ blog, updateBlog }) => {
       )
     } else
       return (
-        <div style={{ width:350, marginBottom:10,height:30, border:'1px solid black' }} className="blog-container">
+        <div style={{ width: 350, marginBottom: 10, height: 30, border: '1px solid black' }} className="blog-container">
           {blog.title} by {blog.author}
-          <button type="submit" style={{
+          <button type="submit" id='show-button' style={{
             marginLeft: 15,
             float: 'right',
           }} onClick={() => setBlogDetails(true)}>show</button>
-          <button type="submit" id="vittu" style={{
+          <button type="submit" className='likebutton' style={{
             marginLeft: 35,
             backgroundColor: 'lightgreen',
             float: 'right',
@@ -64,11 +66,11 @@ const Blog = ({ blog, updateBlog }) => {
 Blog.displayName = 'Blog'
 Blog.propTypes = {
   blog: {
-      title: PropTypes.string,
-      author: PropTypes.string,
-      url: PropTypes.string,
-      likes: PropTypes.number,
-      id: PropTypes.string
+    title: PropTypes.string,
+    author: PropTypes.string,
+    url: PropTypes.string,
+    likes: PropTypes.number,
+    id: PropTypes.string
   },
   updateBlog: PropTypes.func
 };

@@ -1,5 +1,5 @@
 
-import React,{ useState } from 'react'
+import React, { useState } from 'react'
 import Notification from '../components/Notification'
 import ReactNotification from 'react-notifications-component'
 
@@ -43,26 +43,30 @@ const BlogForm = ({ createBlog }) => {
       <ReactNotification />
       <form onSubmit={addBlog}>
         <input
+          id='title'
           placeholder='Title'
           value={newBlogTitle}
           onChange={handleTitleChange}
         />
         <input
+          id='author'
           placeholder='Author'
           value={newBlogAuthor}
           onChange={handleAuthorChange}
         />
         <input
+          id='url'
           placeholder='url'
           value={newBlogUrl}
           onChange={handleUrlChange}
         />
         <input
+          id='likes'
           placeholder='Likes'
           value={newBlogLikes}
           onChange={handleLikesChange}
         />
-        <button type="submit" style={{ marginLeft:10 }}>save</button>
+        <button type="submit" id='save-blog' style={{ marginLeft: 10 }}>save</button>
       </form>
     </div>
   )

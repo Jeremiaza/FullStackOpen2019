@@ -21,7 +21,7 @@ const App = () => {
     blogService.getAll().then(blogs =>
       setBlogs(blogs.sort((a, b) => (a.likes < b.likes) ? 1 : -1))
     )
-  }, [blogs])
+  }, [])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
