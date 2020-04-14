@@ -1,20 +1,22 @@
 
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { connect } from 'react-redux'
 import { createAnecdote } from '../reducers/anecdoteReducer'
+import { createNotification } from '../reducers/notificationReducer'
 import Notification from './Notification'
 const NewAnecdote = (props) => {
     const [notify, setNotify] = useState(false);
-    const dispatch = useDispatch()
 
-    const addAnecdote = (event) => {
+    const addAnecdote = async (event) => {
         event.preventDefault()
         const content = event.target.anecdote.value
         event.target.anecdote.value = ''
         setNotify(true)
-        setInterval(() => { setNotify(false)
-          }, 1500)
-        dispatch(createAnecdote(content))
+        props.createNotification("Created " + content)
+        setInterval(() => {
+            setNotify(false)
+        }, 1500)
+        props.createAnecdote(content)
     }
 
     return (
@@ -28,4 +30,8 @@ const NewAnecdote = (props) => {
     )
 }
 
-export default NewAnecdote
+export default connect(
+    null, 
+    { createAnecdote,
+    createNotification }
+  )(NewAnecdote)

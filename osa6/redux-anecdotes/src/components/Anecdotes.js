@@ -1,7 +1,8 @@
-import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useState } from 'react'
+import { connect } from 'react-redux'
 import { voteAnecdote } from '../reducers/anecdoteReducer'
-
+import { createNotification } from '../reducers/notificationReducer'
+import Notification from './Notification'
 const Anecdote = ({ anecdote, handleClick }) => {
     return (
         <React.Fragment>
@@ -16,23 +17,52 @@ const Anecdote = ({ anecdote, handleClick }) => {
     )
 }
 
-const Anecdotes = () => {
-    const dispatch = useDispatch()
-    const anecdotes = useSelector(state => state)
-
+const Anecdotes = (props) => {
+    const [notify, setNotify] = useState(false);
+    let timeoutId;
+    function showNotification(to) {
+        setNotify(true)
+        if (timeoutId) clearTimeout(timeoutId);
+        timeoutId = setTimeout(function () {
+            setNotify(false)
+        }, to);
+    }
     return (
         <div>
-            {anecdotes.map(anecdote =>
+            {props.anecdotes.map(anecdote =>
                 <Anecdote
                     key={anecdote.id}
                     anecdote={anecdote}
-                    handleClick={() =>
-                        dispatch(voteAnecdote(anecdote.id))
+                    handleClick={() => {
+                        props.createNotification("Voted " + anecdote.content)
+                        showNotification(2000)
+                        props.voteAnecdote(anecdote.id)
+                    }
                     }
                 />
             )}
+            {notify ? <Notification /> : null}
         </div>
     )
 }
 
-export default Anecdotes
+const mapStateToProps = (state) => {
+    if (state.filter === 'ALL' || state.filter === '') {
+        return { anecdotes: state.anecdotes }
+    }
+    return {
+        anecdotes: state.filter
+            ? state.anecdotes.filter(anecdote => anecdote.content.toLowerCase().includes(state.filter))
+            : null//anecdotes.filter(anecdote => !anecdote.includes(filter))
+    }
+}
+
+const mapDispatchToProps = {
+    voteAnecdote,
+    createNotification
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Anecdotes)
