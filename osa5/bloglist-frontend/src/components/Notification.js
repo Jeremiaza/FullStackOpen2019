@@ -1,55 +1,23 @@
-import { store } from 'react-notifications-component'
-import 'react-notifications-component/dist/theme.css'
+import React from 'react'
+import { connect } from 'react-redux'
 
-const Notification = (type, blogTitle, blogAuthor) => {
-  switch (type) {
-  case 'blogcreatesuccess':
-    store.addNotification({
-      title: 'Success!',
-      message: 'A new blog ' + blogTitle + ' by ' + blogAuthor + ' added',
-      type: 'success',
-      insert: 'top',
-      container: 'top-center',
-      animationIn: ['animated', 'fadeIn'],
-      animationOut: ['animated', 'fadeOut'],
-      dismiss: {
-        duration: 2500,
-        onScreen: true
-      }
-    })
-    break
-  case 'loginerror':
-    store.addNotification({
-      title: 'Login error',
-      message: 'Wrong username or password',
-      type: 'danger',
-      insert: 'top',
-      container: 'top-center',
-      animationIn: ['animated', 'fadeIn'],
-      animationOut: ['animated', 'fadeOut'],
-      dismiss: {
-        duration: 2500,
-        onScreen: true
-      }
-    })
-    break
-  case 'deletesuccess':
-    store.addNotification({
-      title: 'Success!',
-      message: 'Blog ' + blogTitle + ' by ' + blogAuthor + ' deleted',
-      type: 'success',
-      insert: 'top',
-      container: 'top-center',
-      animationIn: ['animated', 'fadeIn'],
-      animationOut: ['animated', 'fadeOut'],
-      dismiss: {
-        duration: 2500,
-        onScreen: true
-      }
-    })
-    break
+const Notification = (props) => {
+  const style = {
+    border: 'solid',
+    width:250,
+    padding: 10,
+    borderWidth: 1
   }
-
+  let weird = Object.values(props).map(e => e).join(""); //TODO: Why does it put the function to the notification message as well?
+  return (
+    <div style={style}>
+      {weird}
+    </div>
+  )
 }
 
-export default Notification
+const mapStateToProps = (state) => {
+  if (state.message) return state.message
+}
+
+export default connect(mapStateToProps)(Notification)

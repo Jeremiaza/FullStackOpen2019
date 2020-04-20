@@ -1,13 +1,16 @@
 
 import React, { useState } from 'react'
-import Notification from '../components/Notification'
-import ReactNotification from 'react-notifications-component'
+import { connect } from 'react-redux'
+import { createBlog } from '../reducers/blogReducer'
+import { createNotification } from '../reducers/notificationReducer'
+import Notification from './Notification'
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = (props) => {
   const [newBlogTitle, setNewBlogTitle] = useState('')
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
   const [newBlogUrl, setNewBlogUrl] = useState('')
   const [newBlogLikes, setNewBlogLikes] = useState()
+  const [notify, setNotify] = useState(false);
 
   const handleTitleChange = (event) => {
     setNewBlogTitle(event.target.value)
@@ -22,25 +25,30 @@ const BlogForm = ({ createBlog }) => {
     setNewBlogLikes(event.target.value)
   }
 
-  const addBlog = (event) => {
+  const addBlog = async (event) => {
     event.preventDefault()
-    createBlog({
+    const newBlog = {
       title: newBlogTitle,
       author: newBlogAuthor,
       url: newBlogUrl,
       likes: newBlogLikes
-    })
-    Notification('blogcreatesuccess')
+    }
+    setNotify(true)
+        createNotification("Created " + newBlogTitle)
+        setInterval(() => {
+            setNotify(false)
+        }, 1500)
     setNewBlogTitle('')
     setNewBlogAuthor('')
     setNewBlogUrl('')
     setNewBlogLikes('')
+    props.createBlog(newBlog)
   }
 
   return (
     <div className="formDiv">
       <h2>Create a new blog</h2>
-      <ReactNotification />
+      {notify ? <Notification /> : null}
       <form onSubmit={addBlog}>
         <input
           id='title'
@@ -72,4 +80,8 @@ const BlogForm = ({ createBlog }) => {
   )
 }
 
-export default BlogForm
+export default connect(
+  null, 
+  { createBlog,
+  createNotification }
+)(BlogForm)

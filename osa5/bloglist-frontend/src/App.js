@@ -1,27 +1,25 @@
 import React, { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+import Blogs from './components/Blogs'
+import { createNotification } from './reducers/notificationReducer'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import { connect } from 'react-redux'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import ReactNotification from 'react-notifications-component'
-import 'react-notifications-component/dist/theme.css'
-
-const App = () => {
-  const [blogs, setBlogs] = useState([])
+import { initializeBlogs } from './reducers/blogReducer'
+import { useDispatch } from 'react-redux'
+const App = (props) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   const blogFormRef = React.createRef()
-
+  const dispatch = useDispatch()
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs.sort((a, b) => (a.likes < b.likes) ? 1 : -1))
-    )
-  }, [])
+      dispatch(initializeBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -31,12 +29,6 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-
-  const blogUpdater = () => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs.sort((a, b) => (a.likes < b.likes) ? 1 : -1))
-    )
-  }
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -53,34 +45,13 @@ const App = () => {
       setPassword('')
     } catch (exception) {
       console.log('Wrong credentials')
-      Notification('loginerror')
+      props.createNotification("Wrong credentials ")
     }
-  }
-
-  const addBlog = (blogObject) => {
-    blogFormRef.current.toggleVisibility()
-    blogService
-      .create(blogObject)
-      .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
-      })
-  }
-
-  const deleteBlog = (blogId) => {
-    blogService
-      .deleteById(blogId)
-      .then(() => {
-        let tempBlogs = blogs
-        let removeIndex = tempBlogs.map(function (item) { return item.id }).indexOf(blogId)
-        Notification('deletesuccess', tempBlogs[removeIndex].title, tempBlogs[removeIndex].author)
-        tempBlogs.splice(removeIndex, 1)
-        setBlogs(tempBlogs)
-      })
   }
 
   const blogForm = () => (
     <Togglable buttonLabel='new blog' ref={blogFormRef}>
-      <BlogForm createBlog={addBlog} />
+      <BlogForm />
     </Togglable>
   )
 
@@ -96,6 +67,20 @@ const App = () => {
     </Togglable>
   )
 
+  const userData = () => {
+      if (user) {  
+       return <Togglable buttonLabel='user data'>
+        <h3>{user.name}</h3>
+        <div>Added blogs:</div>
+        {props.blogs.map((blog) => {
+          if (blog && blog.user && blog.user.username === user.username) {
+            return <li>{blog.title}</li>
+          }
+        })}
+      </Togglable>
+    }
+  }
+
   const logOut = () => {
     window.localStorage.removeItem('loggedBlogappUser')
     setUsername('')
@@ -103,9 +88,8 @@ const App = () => {
     setUser(null)
   }
   return (
-    <div>
+    <div style={{marginLeft:20}}>
       <h1>Blogs</h1>
-      <ReactNotification />
       {user === null ?
         loginForm() :
         <div>
@@ -115,21 +99,21 @@ const App = () => {
           }}
           onClick={logOut}>log out</button>
           {blogForm()}
+          {userData()}
         </div>
       }
-      <div>
-        {blogs.map((blog, index) =>
-          <div style={{ display: 'flex' }} key={'blog-container'+index}>
-            <Blog key={blog.id} blog={blog} updateBlog={blogUpdater}/>
-            <button type="submit" style={{
-              height: 30,
-              marginLeft: 10
-            }} onClick={() => deleteBlog(blog.id)}>delete blog</button>
-          </div>
-        )}
-      </div>
+      <Blogs />
     </div>
   )
 }
+const mapStateToProps = (state) => {
+      return { blogs: state.blogs }
+}
 
-export default App
+const mapDispatchToProps = {
+  createNotification
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)

@@ -9,10 +9,10 @@ const LoginForm = ({
 }) => {
   return (
     <div>
-      <h2>Login to Blog App</h2>
+      <h2 style={{marginTop:10}}>Login to Blog App</h2>
 
       <form onSubmit={handleSubmit}>
-        <div>
+        <div style={{margin:5, width:200}}>
           username
           <input
             id='username'
@@ -20,7 +20,7 @@ const LoginForm = ({
             onChange={handleUsernameChange}
           />
         </div>
-        <div>
+        <div style={{margin:5, width:200}}>
           password
           <input
             id='pass'
@@ -29,7 +29,7 @@ const LoginForm = ({
             onChange={handlePasswordChange}
           />
         </div>
-        <button id='logintoapp' type="submit">login</button>
+        <button id='logintoapp' type="submit" style={{margin:5}}><b>login</b></button>
       </form>
     </div>
   )
